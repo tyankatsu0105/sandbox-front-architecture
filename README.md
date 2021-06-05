@@ -1,14 +1,28 @@
 > `initial` ブランチが特に何もしてないやつです
 
+# install
 ```bash
-npm install --prefix packages/client --no-package-lock -E <package-name>
-npm install
+# root
+npm install <package>
+
+# or
+npm install <package> --workspace client
+npm install <package> --workspace mock-server
+
 ```
-
+# serve
 ```bash
-make serve package=client
-make serve package=mock-server
+npm run serve --workspaces
 
-make build package=client
-make build package=mock-server
+# or
+npm run serve --workspace client
+npm run serve --workspace mock-server
+```
+# build
+```bash
+npm run build --workspaces
+
+# or
+npm run build --workspace client
+npm run build --workspace mock-server
 ```
