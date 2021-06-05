@@ -1,0 +1,17 @@
+{
+  "presets": [
+    "@babel/preset-react",
+    "@babel/preset-env",
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "styled-components",
+      {
+        "pure": true
+      }
+    ],
+    "@babel/plugin-proposal-export-namespace-from",
+    "@babel/plugin-proposal-class-properties"
+  ]
+}

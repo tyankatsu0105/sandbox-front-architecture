@@ -1,0 +1,8 @@
+query Book($id: ID!) {
+  node(id: $id) {
+    ... on Book {
+      id
+      name
+    }
+  }
+}

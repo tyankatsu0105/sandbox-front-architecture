@@ -1,0 +1,220 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+"""血液型"""
+enum Blood {
+  A
+  B
+  O
+  AB
+}
+
+type Book implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  """名前"""
+  name: String!
+  """著者"""
+  author: String!
+  """金額"""
+  price: Price!
+  """発売日"""
+  releaseAt: Date!
+}
+
+type BookConnection {
+  edges: [BookConnectionEdge!]
+  nodes: [Book!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type BookConnectionEdge implements Edge {
+  cursor: String!
+  node: Book!
+}
+
+input CreateUserInput {
+  """名前"""
+  name: String!
+  """年齢"""
+  age: Int!
+  """血液型"""
+  blood: Blood!
+}
+
+type CreateUserPayload {
+  user: User
+}
+
+type CreateUsersPayload {
+  users: [User]
+}
+
+"""
+YYYY-MM-DD
+ex: 2020-01-01
+"""
+scalar Date
+
+"""
+ISO 8601準拠 YYYY-MM-DDTHH:mm:ss.sssZ
+ex: 2011-10-05T14:48:00.000Z
+"""
+scalar DateTime
+
+input DeleteUserInput {
+  userID: ID!
+}
+
+type DeleteUserPayload {
+  DeletedUserID: ID!
+  user: User
+}
+
+interface Edge {
+  cursor: String!
+  node: Node!
+}
+
+type Favorites {
+  books: [ID!]
+  movies: [ID!]
+  musics: [ID!]
+}
+
+type Movie implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  """名前"""
+  name: String!
+  """映画監督"""
+  director: String!
+  """公開日"""
+  releaseAt: Date!
+  """公開地域"""
+  releaseCountry: [String!]
+}
+
+type MovieConnection {
+  edges: [MovieConnectionEdge!]
+  nodes: [Movie!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type MovieConnectionEdge implements Edge {
+  cursor: String!
+  node: Movie!
+}
+
+type Music implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  """楽曲名"""
+  name: String!
+  """アーティスト名"""
+  artist: String!
+  """公開日"""
+  releaseAt: Date!
+}
+
+type MusicConnection {
+  edges: [MusicConnectionEdge!]
+  nodes: [Music!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type MusicConnectionEdge implements Edge {
+  cursor: String!
+  node: Music!
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): CreateUserPayload!
+  createUsers(input: [CreateUserInput!]!): CreateUsersPayload!
+  deleteUser(input: DeleteUserInput!): DeleteUserPayload!
+  """実際に使うことはない extendしてMutationを拡張していくために元のMutationが必要なので作っただけ"""
+  noop(input: NoopInput): NoopPayload
+}
+
+interface Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+input NoopInput {
+  clientMutationId: String
+}
+
+type NoopPayload {
+  clientMutationId: String
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}
+
+input PaginationInput {
+  first: Int
+  last: Int
+  after: String
+  before: String
+}
+
+type Price {
+  amount: Float!
+  symbol: String!
+}
+
+type Query {
+  book(id: ID!): Book
+  books(page: PaginationInput!, ids: [ID!]): BookConnection!
+  movie(id: ID!): Movie
+  movies(page: PaginationInput!, ids: [ID!]): MovieConnection!
+  music(id: ID!): Music
+  musics(page: PaginationInput!, ids: [ID!]): MusicConnection!
+  node(id: ID!): Node
+  nodes(ids: [ID!]!): [Node]!
+  user(id: ID!): User
+  users(page: PaginationInput!, ids: [ID!]): UserConnection!
+}
+
+type User implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  """名前"""
+  name: String!
+  """年齢"""
+  age: Int!
+  """血液型"""
+  blood: Blood!
+  """出身国"""
+  country: String
+  """誕生日"""
+  birthDay: Date
+  favorites: Favorites
+}
+
+type UserConnection {
+  edges: [UserConnectionEdge!]
+  nodes: [User!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type UserConnectionEdge implements Edge {
+  cursor: String!
+  node: User!
+}

@@ -1,0 +1,18 @@
+query UserFavoriteMusics($ids: [ID!], $page: PaginationInput!) {
+  musics(ids: $ids, page: $page) {
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    edges {
+      cursor
+      node {
+        id
+        name
+      }
+    }
+  }
+}

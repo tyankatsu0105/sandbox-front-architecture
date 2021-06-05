@@ -1,0 +1,52 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Mutation {
+  "実際に使うことはない extendしてMutationを拡張していくために元のMutationが必要なので作っただけ"
+  noop(input: NoopInput): NoopPayload
+}
+
+input NoopInput {
+  clientMutationId: String
+}
+
+type NoopPayload {
+  clientMutationId: String
+}
+
+type Query {
+  node(id: ID!): Node
+  nodes(ids: [ID!]!): [Node]!
+}
+
+type PageInfo {
+  startCursor: String
+  endCursor: String
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
+}
+
+input PaginationInput {
+  first: Int
+  last: Int
+  after: String
+  before: String
+}
+
+interface Edge {
+  cursor: String!
+  node: Node!
+}
+
+interface Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+}
+
+type Price {
+  amount: Float!
+  symbol: String!
+}

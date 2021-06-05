@@ -1,0 +1,15 @@
+query User($id: ID!) {
+  node(id: $id) {
+    ... on User {
+      id
+      name
+      birthDay
+      createdAt
+      favorites {
+        books
+        movies
+        musics
+      }
+    }
+  }
+}
