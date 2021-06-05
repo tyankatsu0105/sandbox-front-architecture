@@ -37,6 +37,14 @@ type BookConnectionEdge implements Edge {
   node: Book!
 }
 
+input CreateTodoInput {
+  description: String!
+}
+
+type CreateTodoPayload {
+  todo: Todo
+}
+
 input CreateUserInput {
   """名前"""
   name: String!
@@ -137,11 +145,14 @@ type MusicConnectionEdge implements Edge {
 }
 
 type Mutation {
+  createTodo(input: CreateTodoInput!): CreateTodoPayload!
   createUser(input: CreateUserInput!): CreateUserPayload!
   createUsers(input: [CreateUserInput!]!): CreateUsersPayload!
   deleteUser(input: DeleteUserInput!): DeleteUserPayload!
   """実際に使うことはない extendしてMutationを拡張していくために元のMutationが必要なので作っただけ"""
   noop(input: NoopInput): NoopPayload
+  removeTodo(input: RemoveTodoInput!): RemoveTodoPayload!
+  updateTodo(input: UpdateTodoInput!): UpdateTodoPayload!
 }
 
 interface Node {
@@ -186,8 +197,49 @@ type Query {
   musics(page: PaginationInput!, ids: [ID!]): MusicConnection!
   node(id: ID!): Node
   nodes(ids: [ID!]!): [Node]!
+  todo(id: ID!): Todo
+  todos(page: PaginationInput!, ids: [ID!]): TodoConnection!
   user(id: ID!): User
   users(page: PaginationInput!, ids: [ID!]): UserConnection!
+}
+
+input RemoveTodoInput {
+  id: ID!
+}
+
+type RemoveTodoPayload {
+  todo: Todo
+}
+
+type Todo implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  """説明"""
+  description: String!
+  """完了状況"""
+  isDone: Boolean!
+}
+
+type TodoConnection {
+  edges: [TodoConnectionEdge!]
+  nodes: [Todo!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type TodoConnectionEdge implements Edge {
+  cursor: String!
+  node: Todo!
+}
+
+input UpdateTodoInput {
+  id: ID!
+  isDone: Boolean!
+}
+
+type UpdateTodoPayload {
+  todo: Todo
 }
 
 type User implements Node {

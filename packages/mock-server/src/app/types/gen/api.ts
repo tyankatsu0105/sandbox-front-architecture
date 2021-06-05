@@ -61,6 +61,15 @@ export type BookConnectionEdge = Edge & {
   node: Book;
 };
 
+export type CreateTodoInput = {
+  description: Scalars['String'];
+};
+
+export type CreateTodoPayload = {
+  __typename?: 'CreateTodoPayload';
+  todo?: Maybe<Todo>;
+};
+
 export type CreateUserInput = {
   /** 名前 */
   name: Scalars['String'];
@@ -162,11 +171,19 @@ export type MusicConnectionEdge = Edge & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createTodo: CreateTodoPayload;
   createUser: CreateUserPayload;
   createUsers: CreateUsersPayload;
   deleteUser: DeleteUserPayload;
   /** 実際に使うことはない extendしてMutationを拡張していくために元のMutationが必要なので作っただけ */
   noop?: Maybe<NoopPayload>;
+  removeTodo: RemoveTodoPayload;
+  updateTodo: UpdateTodoPayload;
+};
+
+
+export type MutationCreateTodoArgs = {
+  input: CreateTodoInput;
 };
 
 
@@ -187,6 +204,16 @@ export type MutationDeleteUserArgs = {
 
 export type MutationNoopArgs = {
   input?: Maybe<NoopInput>;
+};
+
+
+export type MutationRemoveTodoArgs = {
+  input: RemoveTodoInput;
+};
+
+
+export type MutationUpdateTodoArgs = {
+  input: UpdateTodoInput;
 };
 
 export type Node = {
@@ -235,6 +262,8 @@ export type Query = {
   musics: MusicConnection;
   node?: Maybe<Node>;
   nodes: Array<Maybe<Node>>;
+  todo?: Maybe<Todo>;
+  todos: TodoConnection;
   user?: Maybe<User>;
   users: UserConnection;
 };
@@ -283,6 +312,17 @@ export type QueryNodesArgs = {
 };
 
 
+export type QueryTodoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTodosArgs = {
+  page: PaginationInput;
+  ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID'];
 };
@@ -291,6 +331,50 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   page: PaginationInput;
   ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type RemoveTodoInput = {
+  id: Scalars['ID'];
+};
+
+export type RemoveTodoPayload = {
+  __typename?: 'RemoveTodoPayload';
+  todo?: Maybe<Todo>;
+};
+
+export type Todo = Node & {
+  __typename?: 'Todo';
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  /** 説明 */
+  description: Scalars['String'];
+  /** 完了状況 */
+  isDone: Scalars['Boolean'];
+};
+
+export type TodoConnection = {
+  __typename?: 'TodoConnection';
+  edges?: Maybe<Array<TodoConnectionEdge>>;
+  nodes?: Maybe<Array<Todo>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TodoConnectionEdge = Edge & {
+  __typename?: 'TodoConnectionEdge';
+  cursor: Scalars['String'];
+  node: Todo;
+};
+
+export type UpdateTodoInput = {
+  id: Scalars['ID'];
+  isDone: Scalars['Boolean'];
+};
+
+export type UpdateTodoPayload = {
+  __typename?: 'UpdateTodoPayload';
+  todo?: Maybe<Todo>;
 };
 
 export type User = Node & {
@@ -325,6 +409,22 @@ export type UserConnectionEdge = Edge & {
   node: User;
 };
 
+export type CreateTodoMutationVariables = Exact<{
+  input: CreateTodoInput;
+}>;
+
+
+export type CreateTodoMutation = (
+  { __typename?: 'Mutation' }
+  & { createTodo: (
+    { __typename?: 'CreateTodoPayload' }
+    & { todo?: Maybe<(
+      { __typename?: 'Todo' }
+      & Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'>
+    )> }
+  ) }
+);
+
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
 }>;
@@ -341,6 +441,38 @@ export type CreateUserMutation = (
   ) }
 );
 
+export type RemoveTodoMutationVariables = Exact<{
+  input: RemoveTodoInput;
+}>;
+
+
+export type RemoveTodoMutation = (
+  { __typename?: 'Mutation' }
+  & { removeTodo: (
+    { __typename?: 'RemoveTodoPayload' }
+    & { todo?: Maybe<(
+      { __typename?: 'Todo' }
+      & Pick<Todo, 'id'>
+    )> }
+  ) }
+);
+
+export type UpdateTodoMutationVariables = Exact<{
+  input: UpdateTodoInput;
+}>;
+
+
+export type UpdateTodoMutation = (
+  { __typename?: 'Mutation' }
+  & { updateTodo: (
+    { __typename?: 'UpdateTodoPayload' }
+    & { todo?: Maybe<(
+      { __typename?: 'Todo' }
+      & Pick<Todo, 'id' | 'isDone' | 'updatedAt'>
+    )> }
+  ) }
+);
+
 export type BookQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -351,7 +483,7 @@ export type BookQuery = (
   & { node?: Maybe<(
     { __typename?: 'Book' }
     & Pick<Book, 'id' | 'name'>
-  ) | { __typename?: 'Movie' } | { __typename?: 'Music' } | { __typename?: 'User' }> }
+  ) | { __typename?: 'Movie' } | { __typename?: 'Music' } | { __typename?: 'Todo' } | { __typename?: 'User' }> }
 );
 
 export type BooksQueryVariables = Exact<{
@@ -375,6 +507,40 @@ export type BooksQuery = (
   ) }
 );
 
+export type TodoQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type TodoQuery = (
+  { __typename?: 'Query' }
+  & { node?: Maybe<{ __typename?: 'Book' } | { __typename?: 'Movie' } | { __typename?: 'Music' } | (
+    { __typename?: 'Todo' }
+    & Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'>
+  ) | { __typename?: 'User' }> }
+);
+
+export type TodosQueryVariables = Exact<{
+  page: PaginationInput;
+  ids: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+
+export type TodosQuery = (
+  { __typename?: 'Query' }
+  & { todos: (
+    { __typename?: 'TodoConnection' }
+    & Pick<TodoConnection, 'totalCount'>
+    & { edges?: Maybe<Array<(
+      { __typename?: 'TodoConnectionEdge' }
+      & { node: (
+        { __typename?: 'Todo' }
+        & Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'>
+      ) }
+    )>> }
+  ) }
+);
+
 export type UserQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -382,7 +548,7 @@ export type UserQueryVariables = Exact<{
 
 export type UserQuery = (
   { __typename?: 'Query' }
-  & { node?: Maybe<{ __typename?: 'Book' } | { __typename?: 'Movie' } | { __typename?: 'Music' } | (
+  & { node?: Maybe<{ __typename?: 'Book' } | { __typename?: 'Movie' } | { __typename?: 'Music' } | { __typename?: 'Todo' } | (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name' | 'birthDay' | 'createdAt'>
     & { favorites?: Maybe<(
@@ -575,6 +741,8 @@ export type ResolversTypes = ResolversObject<{
   BookConnection: ResolverTypeWrapper<BookConnection>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   BookConnectionEdge: ResolverTypeWrapper<BookConnectionEdge>;
+  CreateTodoInput: CreateTodoInput;
+  CreateTodoPayload: ResolverTypeWrapper<CreateTodoPayload>;
   CreateUserInput: CreateUserInput;
   CreateUserPayload: ResolverTypeWrapper<CreateUserPayload>;
   CreateUsersPayload: ResolverTypeWrapper<CreateUsersPayload>;
@@ -582,7 +750,7 @@ export type ResolversTypes = ResolversObject<{
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>;
   DeleteUserInput: DeleteUserInput;
   DeleteUserPayload: ResolverTypeWrapper<DeleteUserPayload>;
-  Edge: ResolversTypes['BookConnectionEdge'] | ResolversTypes['MovieConnectionEdge'] | ResolversTypes['MusicConnectionEdge'] | ResolversTypes['UserConnectionEdge'];
+  Edge: ResolversTypes['BookConnectionEdge'] | ResolversTypes['MovieConnectionEdge'] | ResolversTypes['MusicConnectionEdge'] | ResolversTypes['TodoConnectionEdge'] | ResolversTypes['UserConnectionEdge'];
   Favorites: ResolverTypeWrapper<Favorites>;
   Movie: ResolverTypeWrapper<Movie>;
   MovieConnection: ResolverTypeWrapper<MovieConnection>;
@@ -591,7 +759,7 @@ export type ResolversTypes = ResolversObject<{
   MusicConnection: ResolverTypeWrapper<MusicConnection>;
   MusicConnectionEdge: ResolverTypeWrapper<MusicConnectionEdge>;
   Mutation: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Book'] | ResolversTypes['Movie'] | ResolversTypes['Music'] | ResolversTypes['User'];
+  Node: ResolversTypes['Book'] | ResolversTypes['Movie'] | ResolversTypes['Music'] | ResolversTypes['Todo'] | ResolversTypes['User'];
   NoopInput: NoopInput;
   NoopPayload: ResolverTypeWrapper<NoopPayload>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
@@ -600,6 +768,13 @@ export type ResolversTypes = ResolversObject<{
   Price: ResolverTypeWrapper<Price>;
   Float: ResolverTypeWrapper<Scalars['Float']>;
   Query: ResolverTypeWrapper<{}>;
+  RemoveTodoInput: RemoveTodoInput;
+  RemoveTodoPayload: ResolverTypeWrapper<RemoveTodoPayload>;
+  Todo: ResolverTypeWrapper<Todo>;
+  TodoConnection: ResolverTypeWrapper<TodoConnection>;
+  TodoConnectionEdge: ResolverTypeWrapper<TodoConnectionEdge>;
+  UpdateTodoInput: UpdateTodoInput;
+  UpdateTodoPayload: ResolverTypeWrapper<UpdateTodoPayload>;
   User: ResolverTypeWrapper<User>;
   UserConnection: ResolverTypeWrapper<UserConnection>;
   UserConnectionEdge: ResolverTypeWrapper<UserConnectionEdge>;
@@ -613,6 +788,8 @@ export type ResolversParentTypes = ResolversObject<{
   BookConnection: BookConnection;
   Int: Scalars['Int'];
   BookConnectionEdge: BookConnectionEdge;
+  CreateTodoInput: CreateTodoInput;
+  CreateTodoPayload: CreateTodoPayload;
   CreateUserInput: CreateUserInput;
   CreateUserPayload: CreateUserPayload;
   CreateUsersPayload: CreateUsersPayload;
@@ -620,7 +797,7 @@ export type ResolversParentTypes = ResolversObject<{
   DateTime: Scalars['DateTime'];
   DeleteUserInput: DeleteUserInput;
   DeleteUserPayload: DeleteUserPayload;
-  Edge: ResolversParentTypes['BookConnectionEdge'] | ResolversParentTypes['MovieConnectionEdge'] | ResolversParentTypes['MusicConnectionEdge'] | ResolversParentTypes['UserConnectionEdge'];
+  Edge: ResolversParentTypes['BookConnectionEdge'] | ResolversParentTypes['MovieConnectionEdge'] | ResolversParentTypes['MusicConnectionEdge'] | ResolversParentTypes['TodoConnectionEdge'] | ResolversParentTypes['UserConnectionEdge'];
   Favorites: Favorites;
   Movie: Movie;
   MovieConnection: MovieConnection;
@@ -629,7 +806,7 @@ export type ResolversParentTypes = ResolversObject<{
   MusicConnection: MusicConnection;
   MusicConnectionEdge: MusicConnectionEdge;
   Mutation: {};
-  Node: ResolversParentTypes['Book'] | ResolversParentTypes['Movie'] | ResolversParentTypes['Music'] | ResolversParentTypes['User'];
+  Node: ResolversParentTypes['Book'] | ResolversParentTypes['Movie'] | ResolversParentTypes['Music'] | ResolversParentTypes['Todo'] | ResolversParentTypes['User'];
   NoopInput: NoopInput;
   NoopPayload: NoopPayload;
   PageInfo: PageInfo;
@@ -638,6 +815,13 @@ export type ResolversParentTypes = ResolversObject<{
   Price: Price;
   Float: Scalars['Float'];
   Query: {};
+  RemoveTodoInput: RemoveTodoInput;
+  RemoveTodoPayload: RemoveTodoPayload;
+  Todo: Todo;
+  TodoConnection: TodoConnection;
+  TodoConnectionEdge: TodoConnectionEdge;
+  UpdateTodoInput: UpdateTodoInput;
+  UpdateTodoPayload: UpdateTodoPayload;
   User: User;
   UserConnection: UserConnection;
   UserConnectionEdge: UserConnectionEdge;
@@ -668,6 +852,11 @@ export type BookConnectionEdgeResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type CreateTodoPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTodoPayload'] = ResolversParentTypes['CreateTodoPayload']> = ResolversObject<{
+  todo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type CreateUserPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateUserPayload'] = ResolversParentTypes['CreateUserPayload']> = ResolversObject<{
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -693,7 +882,7 @@ export type DeleteUserPayloadResolvers<ContextType = any, ParentType extends Res
 }>;
 
 export type EdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Edge'] = ResolversParentTypes['Edge']> = ResolversObject<{
-  __resolveType?: TypeResolveFn<'BookConnectionEdge' | 'MovieConnectionEdge' | 'MusicConnectionEdge' | 'UserConnectionEdge', ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<'BookConnectionEdge' | 'MovieConnectionEdge' | 'MusicConnectionEdge' | 'TodoConnectionEdge' | 'UserConnectionEdge', ParentType, ContextType>;
   cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Node'], ParentType, ContextType>;
 }>;
@@ -755,14 +944,17 @@ export type MusicConnectionEdgeResolvers<ContextType = any, ParentType extends R
 }>;
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createTodo?: Resolver<ResolversTypes['CreateTodoPayload'], ParentType, ContextType, RequireFields<MutationCreateTodoArgs, 'input'>>;
   createUser?: Resolver<ResolversTypes['CreateUserPayload'], ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   createUsers?: Resolver<ResolversTypes['CreateUsersPayload'], ParentType, ContextType, RequireFields<MutationCreateUsersArgs, 'input'>>;
   deleteUser?: Resolver<ResolversTypes['DeleteUserPayload'], ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'input'>>;
   noop?: Resolver<Maybe<ResolversTypes['NoopPayload']>, ParentType, ContextType, RequireFields<MutationNoopArgs, never>>;
+  removeTodo?: Resolver<ResolversTypes['RemoveTodoPayload'], ParentType, ContextType, RequireFields<MutationRemoveTodoArgs, 'input'>>;
+  updateTodo?: Resolver<ResolversTypes['UpdateTodoPayload'], ParentType, ContextType, RequireFields<MutationUpdateTodoArgs, 'input'>>;
 }>;
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = ResolversObject<{
-  __resolveType?: TypeResolveFn<'Book' | 'Movie' | 'Music' | 'User', ParentType, ContextType>;
+  __resolveType?: TypeResolveFn<'Book' | 'Movie' | 'Music' | 'Todo' | 'User', ParentType, ContextType>;
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
   updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
@@ -796,8 +988,43 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   musics?: Resolver<ResolversTypes['MusicConnection'], ParentType, ContextType, RequireFields<QueryMusicsArgs, 'page'>>;
   node?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<QueryNodeArgs, 'id'>>;
   nodes?: Resolver<Array<Maybe<ResolversTypes['Node']>>, ParentType, ContextType, RequireFields<QueryNodesArgs, 'ids'>>;
+  todo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType, RequireFields<QueryTodoArgs, 'id'>>;
+  todos?: Resolver<ResolversTypes['TodoConnection'], ParentType, ContextType, RequireFields<QueryTodosArgs, 'page'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   users?: Resolver<ResolversTypes['UserConnection'], ParentType, ContextType, RequireFields<QueryUsersArgs, 'page'>>;
+}>;
+
+export type RemoveTodoPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['RemoveTodoPayload'] = ResolversParentTypes['RemoveTodoPayload']> = ResolversObject<{
+  todo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type TodoResolvers<ContextType = any, ParentType extends ResolversParentTypes['Todo'] = ResolversParentTypes['Todo']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  createdAt?: Resolver<ResolversTypes['DateTime'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['DateTime']>, ParentType, ContextType>;
+  description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isDone?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type TodoConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TodoConnection'] = ResolversParentTypes['TodoConnection']> = ResolversObject<{
+  edges?: Resolver<Maybe<Array<ResolversTypes['TodoConnectionEdge']>>, ParentType, ContextType>;
+  nodes?: Resolver<Maybe<Array<ResolversTypes['Todo']>>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type TodoConnectionEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TodoConnectionEdge'] = ResolversParentTypes['TodoConnectionEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Todo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UpdateTodoPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTodoPayload'] = ResolversParentTypes['UpdateTodoPayload']> = ResolversObject<{
+  todo?: Resolver<Maybe<ResolversTypes['Todo']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
@@ -831,6 +1058,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Book?: BookResolvers<ContextType>;
   BookConnection?: BookConnectionResolvers<ContextType>;
   BookConnectionEdge?: BookConnectionEdgeResolvers<ContextType>;
+  CreateTodoPayload?: CreateTodoPayloadResolvers<ContextType>;
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
   CreateUsersPayload?: CreateUsersPayloadResolvers<ContextType>;
   Date?: GraphQLScalarType;
@@ -850,6 +1078,11 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   PageInfo?: PageInfoResolvers<ContextType>;
   Price?: PriceResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  RemoveTodoPayload?: RemoveTodoPayloadResolvers<ContextType>;
+  Todo?: TodoResolvers<ContextType>;
+  TodoConnection?: TodoConnectionResolvers<ContextType>;
+  TodoConnectionEdge?: TodoConnectionEdgeResolvers<ContextType>;
+  UpdateTodoPayload?: UpdateTodoPayloadResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserConnection?: UserConnectionResolvers<ContextType>;
   UserConnectionEdge?: UserConnectionEdgeResolvers<ContextType>;

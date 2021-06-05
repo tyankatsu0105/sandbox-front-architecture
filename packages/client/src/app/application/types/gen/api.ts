@@ -58,6 +58,14 @@ export type BookConnectionEdge = Edge & {
   node: Book;
 };
 
+export type CreateTodoInput = {
+  description: Scalars['String'];
+};
+
+export type CreateTodoPayload = {
+  todo?: Maybe<Todo>;
+};
+
 export type CreateUserInput = {
   /** 名前 */
   name: Scalars['String'];
@@ -148,11 +156,19 @@ export type MusicConnectionEdge = Edge & {
 };
 
 export type Mutation = {
+  createTodo: CreateTodoPayload;
   createUser: CreateUserPayload;
   createUsers: CreateUsersPayload;
   deleteUser: DeleteUserPayload;
   /** 実際に使うことはない extendしてMutationを拡張していくために元のMutationが必要なので作っただけ */
   noop?: Maybe<NoopPayload>;
+  removeTodo: RemoveTodoPayload;
+  updateTodo: UpdateTodoPayload;
+};
+
+
+export type MutationCreateTodoArgs = {
+  input: CreateTodoInput;
 };
 
 
@@ -173,6 +189,16 @@ export type MutationDeleteUserArgs = {
 
 export type MutationNoopArgs = {
   input?: Maybe<NoopInput>;
+};
+
+
+export type MutationRemoveTodoArgs = {
+  input: RemoveTodoInput;
+};
+
+
+export type MutationUpdateTodoArgs = {
+  input: UpdateTodoInput;
 };
 
 export type Node = {
@@ -217,6 +243,8 @@ export type Query = {
   musics: MusicConnection;
   node?: Maybe<Node>;
   nodes: Array<Maybe<Node>>;
+  todo?: Maybe<Todo>;
+  todos: TodoConnection;
   user?: Maybe<User>;
   users: UserConnection;
 };
@@ -265,6 +293,17 @@ export type QueryNodesArgs = {
 };
 
 
+export type QueryTodoArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryTodosArgs = {
+  page: PaginationInput;
+  ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+
 export type QueryUserArgs = {
   id: Scalars['ID'];
 };
@@ -273,6 +312,45 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   page: PaginationInput;
   ids?: Maybe<Array<Scalars['ID']>>;
+};
+
+export type RemoveTodoInput = {
+  id: Scalars['ID'];
+};
+
+export type RemoveTodoPayload = {
+  todo?: Maybe<Todo>;
+};
+
+export type Todo = Node & {
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
+  /** 説明 */
+  description: Scalars['String'];
+  /** 完了状況 */
+  isDone: Scalars['Boolean'];
+};
+
+export type TodoConnection = {
+  edges?: Maybe<Array<TodoConnectionEdge>>;
+  nodes?: Maybe<Array<Todo>>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type TodoConnectionEdge = Edge & {
+  cursor: Scalars['String'];
+  node: Todo;
+};
+
+export type UpdateTodoInput = {
+  id: Scalars['ID'];
+  isDone: Scalars['Boolean'];
+};
+
+export type UpdateTodoPayload = {
+  todo?: Maybe<Todo>;
 };
 
 export type User = Node & {
@@ -304,12 +382,33 @@ export type UserConnectionEdge = Edge & {
   node: User;
 };
 
+export type CreateTodoMutationVariables = Exact<{
+  input: CreateTodoInput;
+}>;
+
+
+export type CreateTodoMutation = { createTodo: { todo?: Maybe<Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'>> } };
+
 export type CreateUserMutationVariables = Exact<{
   input: CreateUserInput;
 }>;
 
 
 export type CreateUserMutation = { createUser: { user?: Maybe<Pick<User, 'id' | 'name'>> } };
+
+export type RemoveTodoMutationVariables = Exact<{
+  input: RemoveTodoInput;
+}>;
+
+
+export type RemoveTodoMutation = { removeTodo: { todo?: Maybe<Pick<Todo, 'id'>> } };
+
+export type UpdateTodoMutationVariables = Exact<{
+  input: UpdateTodoInput;
+}>;
+
+
+export type UpdateTodoMutation = { updateTodo: { todo?: Maybe<Pick<Todo, 'id' | 'isDone' | 'updatedAt'>> } };
 
 export type BookQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -327,6 +426,24 @@ export type BooksQueryVariables = Exact<{
 export type BooksQuery = { books: (
     Pick<BookConnection, 'totalCount'>
     & { edges?: Maybe<Array<{ node: Pick<Book, 'id' | 'name'> }>> }
+  ) };
+
+export type TodoQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type TodoQuery = { node?: Maybe<Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'>> };
+
+export type TodosQueryVariables = Exact<{
+  page: PaginationInput;
+  ids: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+
+export type TodosQuery = { todos: (
+    Pick<TodoConnection, 'totalCount'>
+    & { edges?: Maybe<Array<{ node: Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'> }>> }
   ) };
 
 export type UserQueryVariables = Exact<{
@@ -387,6 +504,22 @@ export type UsersQuery = { users: (
   ) };
 
 
+export const CreateTodoDocument = gql`
+    mutation CreateTodo($input: CreateTodoInput!) {
+  createTodo(input: $input) {
+    todo {
+      id
+      description
+      isDone
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type CreateTodoMutationFn = Apollo.MutationFunction<CreateTodoMutation, CreateTodoMutationVariables>;
+export type CreateTodoMutationResult = Apollo.MutationResult<CreateTodoMutation>;
+export type CreateTodoMutationOptions = Apollo.BaseMutationOptions<CreateTodoMutation, CreateTodoMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($input: CreateUserInput!) {
   createUser(input: $input) {
@@ -400,6 +533,32 @@ export const CreateUserDocument = gql`
 export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const RemoveTodoDocument = gql`
+    mutation RemoveTodo($input: RemoveTodoInput!) {
+  removeTodo(input: $input) {
+    todo {
+      id
+    }
+  }
+}
+    `;
+export type RemoveTodoMutationFn = Apollo.MutationFunction<RemoveTodoMutation, RemoveTodoMutationVariables>;
+export type RemoveTodoMutationResult = Apollo.MutationResult<RemoveTodoMutation>;
+export type RemoveTodoMutationOptions = Apollo.BaseMutationOptions<RemoveTodoMutation, RemoveTodoMutationVariables>;
+export const UpdateTodoDocument = gql`
+    mutation UpdateTodo($input: UpdateTodoInput!) {
+  updateTodo(input: $input) {
+    todo {
+      id
+      isDone
+      updatedAt
+    }
+  }
+}
+    `;
+export type UpdateTodoMutationFn = Apollo.MutationFunction<UpdateTodoMutation, UpdateTodoMutationVariables>;
+export type UpdateTodoMutationResult = Apollo.MutationResult<UpdateTodoMutation>;
+export type UpdateTodoMutationOptions = Apollo.BaseMutationOptions<UpdateTodoMutation, UpdateTodoMutationVariables>;
 export const BookDocument = gql`
     query Book($id: ID!) {
   node(id: $id) {
@@ -430,6 +589,43 @@ export const BooksDocument = gql`
 export type BooksQueryResult = Apollo.QueryResult<BooksQuery, BooksQueryVariables>;
 export function refetchBooksQuery(variables?: BooksQueryVariables) {
       return { query: BooksDocument, variables: variables }
+    }
+export const TodoDocument = gql`
+    query Todo($id: ID!) {
+  node(id: $id) {
+    ... on Todo {
+      id
+      description
+      isDone
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type TodoQueryResult = Apollo.QueryResult<TodoQuery, TodoQueryVariables>;
+export function refetchTodoQuery(variables?: TodoQueryVariables) {
+      return { query: TodoDocument, variables: variables }
+    }
+export const TodosDocument = gql`
+    query Todos($page: PaginationInput!, $ids: [ID!]!) {
+  todos(page: $page, ids: $ids) {
+    totalCount
+    edges {
+      node {
+        id
+        description
+        isDone
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+    `;
+export type TodosQueryResult = Apollo.QueryResult<TodosQuery, TodosQueryVariables>;
+export function refetchTodosQuery(variables?: TodosQueryVariables) {
+      return { query: TodosDocument, variables: variables }
     }
 export const UserDocument = gql`
     query User($id: ID!) {

@@ -1,0 +1,58 @@
+extend type Query {
+  todos(page: PaginationInput!, ids: [ID!]): TodoConnection!
+  todo(id: ID!): Todo
+}
+
+type TodoConnectionEdge implements Edge {
+  cursor: String!
+  node: Todo!
+}
+
+type TodoConnection {
+  edges: [TodoConnectionEdge!]
+  nodes: [Todo!]
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type Todo implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime
+  "説明"
+  description: String!
+
+  "完了状況"
+  isDone: Boolean!
+}
+
+extend type Mutation {
+  createTodo(input: CreateTodoInput!): CreateTodoPayload!
+  updateTodo(input: UpdateTodoInput!): UpdateTodoPayload!
+  removeTodo(input: RemoveTodoInput!): RemoveTodoPayload!
+}
+
+input CreateTodoInput {
+  description: String!
+}
+
+type CreateTodoPayload {
+  todo: Todo
+}
+
+input UpdateTodoInput {
+  id: ID!
+  isDone: Boolean!
+}
+
+type UpdateTodoPayload {
+  todo: Todo
+}
+
+input RemoveTodoInput {
+  id: ID!
+}
+
+type RemoveTodoPayload {
+  todo: Todo
+}

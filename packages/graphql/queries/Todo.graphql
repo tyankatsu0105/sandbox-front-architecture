@@ -1,0 +1,11 @@
+query Todo($id: ID!) {
+  node(id: $id) {
+    ... on Todo {
+      id
+      description
+      isDone
+      createdAt
+      updatedAt
+    }
+  }
+}

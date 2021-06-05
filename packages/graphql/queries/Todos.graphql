@@ -1,0 +1,14 @@
+query Todos($page: PaginationInput!, $ids: [ID!]!) {
+  todos(page: $page, ids: $ids) {
+    totalCount
+    edges {
+      node {
+        id
+        description
+        isDone
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
