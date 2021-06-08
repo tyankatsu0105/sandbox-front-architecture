@@ -437,13 +437,13 @@ export type TodoQuery = { node?: Maybe<Pick<Todo, 'id' | 'description' | 'isDone
 
 export type TodosQueryVariables = Exact<{
   page: PaginationInput;
-  ids: Array<Scalars['ID']> | Scalars['ID'];
+  ids?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
 
 export type TodosQuery = { todos: (
     Pick<TodoConnection, 'totalCount'>
-    & { edges?: Maybe<Array<{ node: Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'> }>> }
+    & { pageInfo: Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>, edges?: Maybe<Array<{ node: Pick<Todo, 'id' | 'description' | 'isDone' | 'createdAt' | 'updatedAt'> }>> }
   ) };
 
 export type UserQueryVariables = Exact<{
@@ -608,8 +608,14 @@ export function refetchTodoQuery(variables?: TodoQueryVariables) {
       return { query: TodoDocument, variables: variables }
     }
 export const TodosDocument = gql`
-    query Todos($page: PaginationInput!, $ids: [ID!]!) {
+    query Todos($page: PaginationInput!, $ids: [ID!]) {
   todos(page: $page, ids: $ids) {
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
     totalCount
     edges {
       node {

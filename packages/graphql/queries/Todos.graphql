@@ -1,5 +1,11 @@
-query Todos($page: PaginationInput!, $ids: [ID!]!) {
+query Todos($page: PaginationInput!, $ids: [ID!]) {
   todos(page: $page, ids: $ids) {
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
     totalCount
     edges {
       node {

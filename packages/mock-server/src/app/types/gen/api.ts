@@ -522,7 +522,7 @@ export type TodoQuery = (
 
 export type TodosQueryVariables = Exact<{
   page: PaginationInput;
-  ids: Array<Scalars['ID']> | Scalars['ID'];
+  ids?: Maybe<Array<Scalars['ID']> | Scalars['ID']>;
 }>;
 
 
@@ -531,7 +531,10 @@ export type TodosQuery = (
   & { todos: (
     { __typename?: 'TodoConnection' }
     & Pick<TodoConnection, 'totalCount'>
-    & { edges?: Maybe<Array<(
+    & { pageInfo: (
+      { __typename?: 'PageInfo' }
+      & Pick<PageInfo, 'startCursor' | 'endCursor' | 'hasNextPage' | 'hasPreviousPage'>
+    ), edges?: Maybe<Array<(
       { __typename?: 'TodoConnectionEdge' }
       & { node: (
         { __typename?: 'Todo' }
