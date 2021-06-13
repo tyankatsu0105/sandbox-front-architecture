@@ -16,15 +16,15 @@ type Props = {
 // Component
 // ------------------------------------
 
-const Users = (props: Props) => (
+const Todos = (props: Props) => (
   <>
     <Design.Layouts.Header.Component />
 
     <button onClick={props.fetchMoreTodos} type="button">
       fetch more
     </button>
-    {/* <Design.Recipies.UserList.Component users={props.users} /> */}
+    <Design.Recipies.TodoList.Component todos={props.todos} />
   </>
 );
 
-export const Component = React.memo(Users);
+export const Component = React.memo(Todos);

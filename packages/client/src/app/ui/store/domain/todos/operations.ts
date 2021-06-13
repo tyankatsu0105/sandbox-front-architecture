@@ -40,7 +40,7 @@ export const fetchMoreTodos = createAsyncThunk<
   void,
   AsyncThunkConfig<{ message: string }>
 >(`${name}/fetchMoreTodos`, async (_, thunkAPI) => {
-  const { pageInfo } = thunkAPI.getState().domain.users;
+  const { pageInfo } = thunkAPI.getState().domain.todos;
   thunkAPI.dispatch(fetchTodos({ pageInfo }));
 });
 

@@ -23,14 +23,16 @@ type Props = {
 const UserCard = (props: Props) => (
   <StyledWrap>
     <Components.Card.Component
-      body={renderBody({
-        books: props.books,
-        movies: props.movies,
-        musics: props.musics,
-        user: props.user,
-      })}
-      footer={renderFooter({ user: props.user })}
-      header={renderHeader({ user: props.user })}
+      body={
+        <Body
+          books={props.books}
+          movies={props.movies}
+          musics={props.musics}
+          user={props.user}
+        />
+      }
+      footer={<Footer user={props.user} />}
+      header={<Header user={props.user} />}
     />
   </StyledWrap>
 );
@@ -38,22 +40,22 @@ const UserCard = (props: Props) => (
 export const Component = React.memo(UserCard);
 
 // ------------------------------------
-// renderHeader
+// Header
 // ------------------------------------
 
-type RenderHeaderProps = {
+type HeaderProps = {
   user: Props['user'];
 };
 /**
  * depends on {@link UserCard}
  */
-const renderHeader = (props: RenderHeaderProps) => <div>{props.user.name}</div>;
+const Header = (props: HeaderProps) => <div>{props.user.name}</div>;
 
 // ------------------------------------
-// renderBody
+// Body
 // ------------------------------------
 
-type RenderBodyProps = {
+type BodyProps = {
   books: Props['books'];
   movies: Props['movies'];
   musics: Props['musics'];
@@ -62,7 +64,7 @@ type RenderBodyProps = {
 /**
  * depends on {@link UserCard}
  */
-const renderBody = (props: RenderBodyProps) => (
+const Body = (props: BodyProps) => (
   <div>
     <ul>
       <li>誕生日{props.user.birthDay}</li>
@@ -95,16 +97,16 @@ const renderBody = (props: RenderBodyProps) => (
 );
 
 // ------------------------------------
-// renderFooter
+// Footer
 // ------------------------------------
 
-type RenderFooterProps = {
+type FooterProps = {
   user: Props['user'];
 };
 /**
  * depends on {@link UserCard}
  */
-const renderFooter = (props: RenderFooterProps) => (
+const Footer = (props: FooterProps) => (
   <div>ユーザー作成日{props.user.createdAt}</div>
 );
 
