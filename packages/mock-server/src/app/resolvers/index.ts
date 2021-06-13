@@ -1,18 +1,14 @@
+import { assertData } from '../shared/utilities';
 import * as GraphQLTypes from '../types/gen/api';
-import * as Node from './Node/node';
-import * as Nodes from './Node/nodes';
-import * as Book from './Query/book';
-import * as Books from './Query/books';
-import * as Movie from './Query/movie';
-import * as Movies from './Query/movies';
-import * as Music from './Query/music';
-import * as Musics from './Query/musics';
-import * as User from './Query/user';
-import * as Users from './Query/users';
+import * as Mutation from './Mutation';
+import * as Node from './Node';
+import * as Query from './Query';
 
 export const resolvers: GraphQLTypes.Resolvers = {
   Edge: {
     __resolveType(parent) {
+      if (!parent.__typename) return null;
+
       switch (parent.__typename) {
         case 'BookConnectionEdge':
           return 'BookConnectionEdge';
@@ -22,14 +18,23 @@ export const resolvers: GraphQLTypes.Resolvers = {
           return 'MusicConnectionEdge';
         case 'UserConnectionEdge':
           return 'UserConnectionEdge';
+        case 'TodoConnectionEdge':
+          return 'TodoConnectionEdge';
 
         default:
-          return null;
+          return assertData(parent.__typename, () => null);
       }
     },
   },
+  Mutation: {
+    createTodo: Mutation.CreateTodo.resolver,
+    removeTodo: Mutation.RemoveTodo.resolver,
+    updateTodo: Mutation.UpdateTodo.resolver,
+  },
   Node: {
     __resolveType(parent) {
+      if (!parent.__typename) return null;
+
       switch (parent.__typename) {
         case 'User':
           return 'User';
@@ -39,25 +44,30 @@ export const resolvers: GraphQLTypes.Resolvers = {
           return 'Movie';
         case 'Music':
           return 'Music';
+        case 'Todo':
+          return 'Todo';
         default:
-          return null;
+          return assertData(parent.__typename, () => null);
       }
     },
   },
   Query: {
-    book: Book.resolver,
-    books: Books.resolver,
+    book: Query.Book.resolver,
+    books: Query.Books.resolver,
 
-    movie: Movie.resolver,
-    movies: Movies.resolver,
+    movie: Query.Movie.resolver,
+    movies: Query.Movies.resolver,
 
-    music: Music.resolver,
-    musics: Musics.resolver,
+    music: Query.Music.resolver,
+    musics: Query.Musics.resolver,
 
-    node: Node.resolver,
-    nodes: Nodes.resolver,
+    node: Node.Node.resolver,
+    nodes: Node.Nodes.resolver,
 
-    user: User.resolver,
-    users: Users.resolver,
+    todo: Query.Todo.resolver,
+    todos: Query.Todos.resolver,
+
+    user: Query.User.resolver,
+    users: Query.Users.resolver,
   },
 };

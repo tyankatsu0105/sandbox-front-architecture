@@ -1,0 +1,10 @@
+export * as Book from './book';
+export * as Books from './books';
+export * as Movie from './movie';
+export * as Movies from './movies';
+export * as Music from './music';
+export * as Musics from './musics';
+export * as Todo from './todo';
+export * as Todos from './todos';
+export * as User from './user';
+export * as Users from './users';

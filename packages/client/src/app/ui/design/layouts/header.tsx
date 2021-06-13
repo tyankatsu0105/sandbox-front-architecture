@@ -26,6 +26,16 @@ const Header = () => (
             home
           </StyledNavListItemLink>
         </StyledNavListItem>
+
+        <StyledNavListItem>
+          <StyledNavListItemLink
+            activeClassName={activeClassName}
+            to={RoutesEntity.URI.todos}
+          >
+            todos
+          </StyledNavListItemLink>
+        </StyledNavListItem>
+
         <StyledNavListItem>
           <StyledNavListItemLink
             activeClassName={activeClassName}
