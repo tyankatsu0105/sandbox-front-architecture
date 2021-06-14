@@ -1,6 +1,8 @@
 import * as React from 'react';
+import * as ReactHookForm from 'react-hook-form';
 
 import * as Entity from '~client/app/application/businesses/todos/entity';
+import * as Presenter from '~client/app/application/businesses/todos/presenter';
 import * as Design from '~client/app/ui/design';
 
 // ------------------------------------
@@ -8,8 +10,17 @@ import * as Design from '~client/app/ui/design';
 // ------------------------------------
 
 type Props = {
+  create: () => void;
+  createFormHandler: ReactHookForm.UseFormReturn<Presenter.CreteInputValues>;
+  editFormHandler: ReactHookForm.UseFormReturn<Presenter.EditInputArray>;
+  editFormsHandler: ReactHookForm.UseFieldArrayReturn<Presenter.EditInputArray>;
   fetchMoreTodos: () => void;
+  remove: (values: { id: Entity.Todo['id']; index: number }) => void;
   todos: Entity.Todo[];
+  update: (values: {
+    id: Entity.Todo['id'];
+    isDone: Entity.Todo['isDone'];
+  }) => void;
 };
 
 // ------------------------------------

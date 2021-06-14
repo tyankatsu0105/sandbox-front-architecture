@@ -4,9 +4,7 @@ export type CreteInputValues = {
   description: Entity.Todo['description'];
 };
 
-export type EditInputValues = {
-  isDone: Entity.Todo['isDone'];
-};
+export type EditInputValues = Entity.Todo;
 
 export type EditInputArray = {
   todos: EditInputValues[];

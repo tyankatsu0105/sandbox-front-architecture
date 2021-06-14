@@ -47,7 +47,7 @@ const HeaderComponent = (props: HeaderProps) => (
   </div>
 );
 /**
- * depends on {@link UserCard}
+ * depends on {@link TodoList}
  */
 const Header = React.memo(HeaderComponent);
 
@@ -59,7 +59,7 @@ type BodyProps = {
   todo: Props['todos'][number];
 };
 /**
- * depends on {@link UserCard}
+ * depends on {@link TodoList}
  */
 const BodyComponent = (props: BodyProps) => <p>{props.todo.description}</p>;
 const Body = React.memo(BodyComponent);
