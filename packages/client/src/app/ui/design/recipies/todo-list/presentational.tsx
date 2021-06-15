@@ -1,7 +1,9 @@
 import * as React from 'react';
+import * as ReactHookForm from 'react-hook-form';
 import styled from 'styled-components';
 
 import * as Entity from '~client/app/application/businesses/todos/entity';
+import * as Presenter from '~client/app/application/businesses/todos/presenter';
 
 import * as Components from '../../components';
 
@@ -10,25 +12,32 @@ import * as Components from '../../components';
 // ------------------------------------
 
 type Props = {
-  todos: Entity.Todo[];
+  editFormsHandler: ReactHookForm.UseFieldArrayReturn<Presenter.EditInputArray>;
+  remove: (values: { id: Entity.Todo['id']; index: number }) => void;
+  update: (values: {
+    id: Entity.Todo['id'];
+    isDone: Entity.Todo['isDone'];
+  }) => void;
 };
 
 // ------------------------------------
 // Component
 // ------------------------------------
 
-const TodoList = (props: Props) => (
-  <>
-    {props.todos.map((todo) => (
-      <StyledWrap key={todo.id}>
-        <Components.Card.Component
-          body={<Body todo={todo} />}
-          header={<Header todo={todo} />}
-        />
-      </StyledWrap>
-    ))}
-  </>
-);
+const TodoList = (props: Props) => {
+  return (
+    <>
+      {props.editFormsHandler.fields.map((todo) => (
+        <StyledWrap key={todo.id}>
+          <Components.Card.Component
+            body={<Body todo={todo} />}
+            header={<Header todo={todo} />}
+          />
+        </StyledWrap>
+      ))}
+    </>
+  );
+};
 
 export const Component = React.memo(TodoList);
 
@@ -37,14 +46,20 @@ export const Component = React.memo(TodoList);
 // ------------------------------------
 
 type HeaderProps = {
-  todo: Props['todos'][number];
+  todo: Props['editFormsHandler']['fields'][number];
 };
 
 const HeaderComponent = (props: HeaderProps) => (
-  <div>
-    <p>updatedAt {props.todo.updatedAt}</p>
-    <p>createdAt {props.todo.createdAt}</p>
-  </div>
+  <Flex>
+    <div>
+      <p>updatedAt {props.todo.updatedAt}</p>
+      <p>createdAt {props.todo.createdAt}</p>
+    </div>
+    <div>
+      <p>updatedAt {props.todo.updatedAt}</p>
+      <p>createdAt {props.todo.createdAt}</p>
+    </div>
+  </Flex>
 );
 /**
  * depends on {@link TodoList}
@@ -56,7 +71,7 @@ const Header = React.memo(HeaderComponent);
 // ------------------------------------
 
 type BodyProps = {
-  todo: Props['todos'][number];
+  todo: Props['editFormsHandler']['fields'][number];
 };
 /**
  * depends on {@link TodoList}
@@ -70,4 +85,9 @@ const Body = React.memo(BodyComponent);
 
 const StyledWrap = styled.div`
   padding: 20px;
+`;
+
+const Flex = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;

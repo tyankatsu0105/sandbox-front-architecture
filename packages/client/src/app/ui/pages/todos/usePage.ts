@@ -34,6 +34,7 @@ export const usePage = () => {
 // ------------------------------------
 // useForm
 // ------------------------------------
+
 export const useForm = () => {
   const dispatch = ReactRedux.useDispatch();
   const initialFormValues = ReactRedux.useSelector(
@@ -49,16 +50,21 @@ export const useForm = () => {
 
   const editFormsHandler = ReactHookForm.useFieldArray({
     control: editFormHandler.control,
-    keyName: 'todoID',
     name: 'todos',
   });
+
+  /**
+   * reinitialize defaultValues
+   */
+  React.useEffect(() => {
+    editFormHandler.reset({
+      todos: initialFormValues,
+    });
+  }, [initialFormValues]);
 
   const onCreate: ReactHookForm.SubmitHandler<Presenter.CreteInputValues> =
     React.useCallback(
       (values) => {
-        editFormsHandler.append({
-          isDone: false,
-        });
         dispatch(
           StoreTodos.createTodo({
             description: values.description,
@@ -93,7 +99,6 @@ export const useForm = () => {
   return {
     create,
     createFormHandler,
-    editFormHandler,
     editFormsHandler,
     remove,
     update,

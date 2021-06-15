@@ -31,16 +31,16 @@ const render = () => {
   );
 };
 
-if (process.env.NODE_ENV === 'development') {
-  whyDidYouRender(React, {
-    diffNameColor: 'grey',
-    diffPathColor: 'orange',
-    logOnDifferentValues: true,
-    titleColor: 'red',
-    trackAllPureComponents: true,
-    trackExtraHooks: [[require('react-redux/lib'), 'useSelector']],
-    trackHooks: true,
-  });
-}
+// if (process.env.NODE_ENV === 'development') {
+//   whyDidYouRender(React, {
+//     diffNameColor: 'grey',
+//     diffPathColor: 'orange',
+//     logOnDifferentValues: true,
+//     titleColor: 'red',
+//     trackAllPureComponents: true,
+//     trackExtraHooks: [[require('react-redux/lib'), 'useSelector']],
+//     trackHooks: true,
+//   });
+// }
 
 render();
