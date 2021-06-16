@@ -1,7 +1,7 @@
 import * as React from 'react';
 
+import { useForm, usePage } from './hooks';
 import * as Presentational from './presentational';
-import { useForm, usePage } from './usePage';
 
 // ------------------------------------
 // Props
