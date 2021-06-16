@@ -12,6 +12,7 @@ import * as Components from '../../components';
 // ------------------------------------
 
 type Props = {
+  editFormHandler: ReactHookForm.UseFormReturn<Presenter.EditInputArray>;
   editFormsHandler: ReactHookForm.UseFieldArrayReturn<Presenter.EditInputArray>;
   remove: (values: { id: Entity.Todo['id']; index: number }) => void;
   update: (values: {
@@ -27,11 +28,20 @@ type Props = {
 const TodoList = (props: Props) => {
   return (
     <>
-      {props.editFormsHandler.fields.map((todo) => (
+      {props.editFormsHandler.fields.map((todo, index) => (
         <StyledWrap key={todo.id}>
-          <Components.Card.Component
+          <StyledCard
             body={<Body todo={todo} />}
-            header={<Header todo={todo} />}
+            header={
+              <Header
+                editFormHandler={props.editFormHandler}
+                index={index}
+                remove={props.remove}
+                todo={todo}
+                update={props.update}
+              />
+            }
+            isDone={todo.isDone}
           />
         </StyledWrap>
       ))}
@@ -46,21 +56,51 @@ export const Component = React.memo(TodoList);
 // ------------------------------------
 
 type HeaderProps = {
+  editFormHandler: Props['editFormHandler'];
+  index: number;
+  remove: Props['remove'];
   todo: Props['editFormsHandler']['fields'][number];
+  update: Props['update'];
 };
 
-const HeaderComponent = (props: HeaderProps) => (
-  <Flex>
-    <div>
-      <p>updatedAt {props.todo.updatedAt}</p>
-      <p>createdAt {props.todo.createdAt}</p>
-    </div>
-    <div>
-      <p>updatedAt {props.todo.updatedAt}</p>
-      <p>createdAt {props.todo.createdAt}</p>
-    </div>
-  </Flex>
-);
+const HeaderComponent = (props: HeaderProps) => {
+  const handleChange = React.useCallback(() => {
+    const result = props.editFormHandler.getValues(`todos.${props.index}`);
+    props.update({ id: result.id, isDone: !result.isDone });
+  }, [props.editFormHandler]);
+
+  const handleRemove = React.useCallback(() => {
+    const result = props.editFormHandler.getValues(`todos.${props.index}`);
+    props.remove({ id: result.id, index: props.index });
+  }, [props.editFormHandler]);
+  return (
+    <HeaderWrap>
+      <Flex>
+        <div>
+          <p>updatedAt {props.todo.updatedAt}</p>
+          <p>createdAt {props.todo.createdAt}</p>
+        </div>
+        <div>
+          <div>
+            <label htmlFor={`todos.${props.index}.isDone`}>Done</label>
+            <Components.Checkbox.Component
+              inputProps={{
+                ...props.editFormHandler.register(
+                  `todos.${props.index}.isDone`
+                ),
+                checked: props.todo.isDone,
+                id: `todos.${props.index}.isDone`,
+                onChange: handleChange,
+              }}
+            />
+          </div>
+        </div>
+      </Flex>
+
+      <Remove onClick={handleRemove}>✖</Remove>
+    </HeaderWrap>
+  );
+};
 /**
  * depends on {@link TodoList}
  */
@@ -82,6 +122,12 @@ const Body = React.memo(BodyComponent);
 // ------------------------------------
 // Styles
 // ------------------------------------
+type StyledCardProps = {
+  isDone: Props['editFormsHandler']['fields'][number]['isDone'];
+};
+const StyledCard = styled(Components.Card.Component)<StyledCardProps>`
+  background-color: ${(props) => props.isDone && '#ccc'};
+`;
 
 const StyledWrap = styled.div`
   padding: 20px;
@@ -90,4 +136,13 @@ const StyledWrap = styled.div`
 const Flex = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+const HeaderWrap = styled.div`
+  position: relative;
+`;
+
+const Remove = styled.button`
+  position: absolute;
+  top: -20px;
+  right: -20px;
 `;

@@ -9,14 +9,14 @@ type Props = {
   body?: React.ReactNode;
   footer?: React.ReactNode;
   header?: React.ReactNode;
-};
+} & Pick<React.HTMLAttributes<HTMLDivElement>, 'className'>;
 
 // ------------------------------------
 // Component
 // ------------------------------------
 
 export const Card = (props: Props) => (
-  <StyledWrap>
+  <StyledWrap className={props.className}>
     {props.header && renderHeader({ header: props.header })}
     {props.body && renderBody({ body: props.body })}
     {props.footer && renderFooter({ footer: props.footer })}

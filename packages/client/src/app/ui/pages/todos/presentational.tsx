@@ -12,6 +12,7 @@ import * as Design from '~client/app/ui/design';
 type Props = {
   create: () => void;
   createFormHandler: ReactHookForm.UseFormReturn<Presenter.CreteInputValues>;
+  editFormHandler: ReactHookForm.UseFormReturn<Presenter.EditInputArray>;
   editFormsHandler: ReactHookForm.UseFieldArrayReturn<Presenter.EditInputArray>;
   fetchMoreTodos: () => void;
   remove: (values: { id: Entity.Todo['id']; index: number }) => void;
@@ -39,6 +40,7 @@ const Todos = (props: Props) => (
       fetch more
     </button>
     <Design.Recipies.TodoList.Component
+      editFormHandler={props.editFormHandler}
       editFormsHandler={props.editFormsHandler}
       remove={props.remove}
       update={props.update}

@@ -20,9 +20,8 @@ type Props = {
 
 const CreateTodoForm = (props: Props) => (
   <>
-    <Components.Input.Component
+    <Components.TextField.Component
       inputProps={{
-        type: 'text',
         ...props.createFormHandler.register('description'),
       }}
     />

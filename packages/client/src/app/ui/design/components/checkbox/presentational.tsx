@@ -6,20 +6,23 @@ import styled from 'styled-components';
 // ------------------------------------
 
 type Props = {
-  readonly inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
+  readonly inputProps?: Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'type'
+  >;
 };
 
 // ------------------------------------
 // Component
 // ------------------------------------
 
-const Input: React.VFC<Props> = (props) => (
+const Checkbox: React.VFC<Props> = (props) => (
   <StyledWrap>
-    <StyledInput {...props.inputProps} />
+    <StyledInput type="checkbox" {...props.inputProps} />
   </StyledWrap>
 );
 
-export const Component = React.memo(Input);
+export const Component = React.memo(Checkbox);
 
 // ------------------------------------
 // Styles

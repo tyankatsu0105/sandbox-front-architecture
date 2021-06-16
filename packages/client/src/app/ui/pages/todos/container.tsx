@@ -15,13 +15,20 @@ type Props = {};
 
 export const Component = (props: Props) => {
   const { fetchMoreTodos, todos } = usePage();
-  const { create, createFormHandler, editFormsHandler, remove, update } =
-    useForm();
+  const {
+    create,
+    createFormHandler,
+    editFormHandler,
+    editFormsHandler,
+    remove,
+    update,
+  } = useForm();
 
   return (
     <Presentational.Component
       create={create}
       createFormHandler={createFormHandler}
+      editFormHandler={editFormHandler}
       editFormsHandler={editFormsHandler}
       fetchMoreTodos={fetchMoreTodos}
       remove={remove}
