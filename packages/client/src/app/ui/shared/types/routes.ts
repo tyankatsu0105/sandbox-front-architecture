@@ -5,15 +5,14 @@
  * PathParams<typeof uri>
  * // => 'teamID' | 'userID'
  */
-export type PathParams<
-  Path extends string
-> = Path extends `:${infer Param}/${infer Rest}`
-  ? Param | PathParams<Rest>
-  : Path extends `:${infer Param}`
-  ? Param
-  : Path extends `${any}:${infer Param}`
-  ? PathParams<`:${Param}`>
-  : never;
+export type PathParams<Path extends string> =
+  Path extends `:${infer Param}/${infer Rest}`
+    ? Param | PathParams<Rest>
+    : Path extends `:${infer Param}`
+    ? Param
+    : Path extends `${any}/:${infer Param}`
+    ? PathParams<`:${Param}`>
+    : never;
 
 /**
  * react routerのParams型に利用する
