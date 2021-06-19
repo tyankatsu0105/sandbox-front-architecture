@@ -1,3 +1,4 @@
+import * as Connection from '~client/app/application/types/connection';
 import * as TypesTodo from '~client/app/application/types/todo';
 
 export type Todo = {
@@ -7,3 +8,5 @@ export type Todo = {
   readonly isDone: TypesTodo.Todo['isDone'];
   readonly updatedAt: TypesTodo.Todo['updatedAt'];
 };
+
+export type PageInfo = Connection.PageInfo;

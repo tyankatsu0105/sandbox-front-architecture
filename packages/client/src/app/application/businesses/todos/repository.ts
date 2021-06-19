@@ -27,6 +27,15 @@ export class TodosRepository implements Interface.TodosRepository {
       };
     });
   }
+
+  get toEntityPageInfo(): Entity.PageInfo {
+    return {
+      endCursor: this.data.todos.pageInfo.endCursor,
+      hasNextPage: this.data.todos.pageInfo.hasNextPage,
+      hasPreviousPage: this.data.todos.pageInfo.hasPreviousPage,
+      startCursor: this.data.todos.pageInfo.startCursor,
+    };
+  }
 }
 
 export class CreateTodoRepository implements Interface.CreateTodoRepository {

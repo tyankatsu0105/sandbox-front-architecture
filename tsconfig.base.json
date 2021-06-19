@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "~client/*": ["packages/client/src/*"]
+      "~client/*": ["packages/client/src/*"],
+      "~mock-server/*": ["packages/mock-server/src/*"]
     },
     "allowSyntheticDefaultImports": true
   },

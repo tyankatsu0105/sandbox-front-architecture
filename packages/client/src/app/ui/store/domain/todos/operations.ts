@@ -24,9 +24,10 @@ export const fetchTodos = createAsyncThunk<
       query: GraphQLTypes.TodosDocument,
       variables: { page: { after: args.pageInfo?.endCursor, first: 5 } },
     });
+    console.log(data);
 
     return {
-      pageInfo: data.todos.pageInfo,
+      pageInfo: new Repository.TodosRepository(data).toEntityPageInfo,
       todos: new Repository.TodosRepository(data).toEntityTodos,
       totalCount: data.todos.totalCount,
     };
