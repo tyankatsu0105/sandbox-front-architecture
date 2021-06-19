@@ -1,4 +1,7 @@
 import { setupServer } from 'msw/node';
 
-export const createServer = (requestHandlers: any) =>
-  setupServer(...requestHandlers);
+import * as Handlers from './handlers';
+
+const handlers = [...Handlers.Query.TodosQuery.handlers];
+
+export const createServer = setupServer(...handlers);
