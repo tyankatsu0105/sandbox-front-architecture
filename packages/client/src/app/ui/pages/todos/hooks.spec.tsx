@@ -28,6 +28,9 @@ jest.mock(
 // ------------------------------------
 // Test cases
 // ------------------------------------
+beforeAll(() => {
+  jest.clearAllMocks();
+});
 
 describe('hooks', () => {
   describe('usePage', () => {
@@ -112,6 +115,54 @@ describe('hooks', () => {
       });
 
       expect(StoreTodos.updateTodo).toHaveBeenCalledWith(values);
+    });
+
+    it('when called createFormHandler, then called useForm of react hook form', () => {
+      const spy = jest.spyOn(ReactHookForm, 'useForm');
+
+      const { result } = TestingLibraryReactHooks.renderHook(
+        () => Hooks.useForm(),
+        { wrapper: Utilities.Test.Utilities.TestingLibrary.wrapper }
+      );
+
+      TestingLibraryReactHooks.act(() => {
+        result.current.createFormHandler;
+      });
+
+      expect(spy).toHaveBeenCalledWith();
+    });
+
+    it('when called editFormHandler, then called useForm of react hook form', () => {
+      const spy = jest.spyOn(ReactHookForm, 'useForm');
+
+      const { result } = TestingLibraryReactHooks.renderHook(
+        () => Hooks.useForm(),
+        { wrapper: Utilities.Test.Utilities.TestingLibrary.wrapper }
+      );
+
+      TestingLibraryReactHooks.act(() => {
+        result.current.editFormHandler;
+      });
+
+      expect(spy).toHaveBeenCalledWith();
+    });
+
+    it('when called editFormsHandler, then called useFieldArray of react hook form', () => {
+      const spy = jest.spyOn(ReactHookForm, 'useFieldArray');
+
+      const { result } = TestingLibraryReactHooks.renderHook(
+        () => Hooks.useForm(),
+        { wrapper: Utilities.Test.Utilities.TestingLibrary.wrapper }
+      );
+
+      TestingLibraryReactHooks.act(() => {
+        result.current.editFormsHandler;
+      });
+
+      expect(spy).toHaveBeenCalledWith({
+        control: result.current.editFormHandler.control,
+        name: 'todos',
+      });
     });
   });
 });
