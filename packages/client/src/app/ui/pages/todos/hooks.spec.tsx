@@ -1,6 +1,7 @@
 import '~client/app/ui/shared/utilities/test/module-mocks/react-redux';
 
 import * as TestingLibraryReactHooks from '@testing-library/react-hooks';
+import * as ReactHookForm from 'react-hook-form';
 import * as ReactRedux from 'react-redux';
 
 import * as Utilities from '~client/app/ui/shared/utilities';
@@ -12,11 +13,17 @@ import * as Hooks from './hooks';
 // Setups
 // ------------------------------------
 
-jest.mock('~client/app/ui/store/domain/todos', () => ({
-  ...jest.requireActual('~client/app/ui/store/domain/todos'),
-  fetchMoreTodos: jest.fn(),
-  fetchTodos: jest.fn(),
-}));
+jest.mock(
+  '~client/app/ui/store/domain/todos',
+  (): Utilities.Test.Utilities.Mock.MockMap<typeof StoreTodos> => ({
+    ...jest.requireActual('~client/app/ui/store/domain/todos'),
+    createTodo: jest.fn(),
+    fetchMoreTodos: jest.fn(),
+    fetchTodos: jest.fn(),
+    removeTodo: jest.fn(),
+    updateTodo: jest.fn(),
+  })
+);
 
 // ------------------------------------
 // Test cases
@@ -54,6 +61,57 @@ describe('hooks', () => {
       });
 
       expect(StoreTodos.fetchMoreTodos).toHaveBeenCalledWith();
+    });
+  });
+
+  describe('useForm', () => {
+    it('when called create, then dispatch createTodo', async () => {
+      const { result } = TestingLibraryReactHooks.renderHook(
+        () => Hooks.useForm(),
+        { wrapper: Utilities.Test.Utilities.TestingLibrary.wrapper }
+      );
+
+      await TestingLibraryReactHooks.act(async () => {
+        await result.current.create();
+      });
+
+      expect(StoreTodos.createTodo).toHaveBeenCalledWith({
+        description: undefined,
+      });
+    });
+
+    it('when called remove, then dispatch removeTodo', () => {
+      const { result } = TestingLibraryReactHooks.renderHook(
+        () => Hooks.useForm(),
+        { wrapper: Utilities.Test.Utilities.TestingLibrary.wrapper }
+      );
+      const values: Parameters<typeof result.current.remove>[0] = {
+        id: 'id',
+        index: 0,
+      };
+
+      TestingLibraryReactHooks.act(() => {
+        result.current.remove(values);
+      });
+
+      expect(StoreTodos.removeTodo).toHaveBeenCalledWith({ id: values.id });
+    });
+
+    it('when called update, then dispatch updateTodo', () => {
+      const { result } = TestingLibraryReactHooks.renderHook(
+        () => Hooks.useForm(),
+        { wrapper: Utilities.Test.Utilities.TestingLibrary.wrapper }
+      );
+      const values: Parameters<typeof result.current.update>[0] = {
+        id: 'id',
+        isDone: true,
+      };
+
+      TestingLibraryReactHooks.act(() => {
+        result.current.update(values);
+      });
+
+      expect(StoreTodos.updateTodo).toHaveBeenCalledWith(values);
     });
   });
 });
