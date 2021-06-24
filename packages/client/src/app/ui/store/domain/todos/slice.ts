@@ -30,7 +30,7 @@ const name = `${Constants.parentsKey}/${Constants.featureKey}`;
 const slice = ReduxToolkit.createSlice({
   extraReducers: (builder) => {
     builder
-      .addCase(Operations.fetchTodos.pending, (state, action) => {
+      .addCase(Operations.fetchTodos.pending, (state) => {
         state.status = Status.status.SUBMITTING;
       })
       .addCase(Operations.fetchTodos.fulfilled, (state, action) => {
@@ -44,7 +44,7 @@ const slice = ReduxToolkit.createSlice({
         if (action.payload) console.error(action.payload.message);
       })
 
-      .addCase(Operations.fetchMoreTodos.pending, (state, action) => {
+      .addCase(Operations.fetchMoreTodos.pending, (state) => {
         state.status = Status.status.SUBMITTING;
       })
       .addCase(Operations.fetchMoreTodos.rejected, (state, action) => {
@@ -52,7 +52,7 @@ const slice = ReduxToolkit.createSlice({
         if (action.payload) console.error(action.payload.message);
       })
 
-      .addCase(Operations.createTodo.pending, (state, action) => {
+      .addCase(Operations.createTodo.pending, (state) => {
         state.status = Status.status.SUBMITTING;
       })
       .addCase(Operations.createTodo.fulfilled, (state, action) => {
@@ -64,7 +64,7 @@ const slice = ReduxToolkit.createSlice({
         if (action.payload) console.error(action.payload.message);
       })
 
-      .addCase(Operations.updateTodo.pending, (state, action) => {
+      .addCase(Operations.updateTodo.pending, (state) => {
         state.status = Status.status.SUBMITTING;
       })
       .addCase(Operations.updateTodo.fulfilled, (state, action) => {
@@ -80,7 +80,7 @@ const slice = ReduxToolkit.createSlice({
         if (action.payload) console.error(action.payload.message);
       })
 
-      .addCase(Operations.removeTodo.pending, (state, action) => {
+      .addCase(Operations.removeTodo.pending, (state) => {
         state.status = Status.status.SUBMITTING;
       })
       .addCase(Operations.removeTodo.fulfilled, (state, action) => {
