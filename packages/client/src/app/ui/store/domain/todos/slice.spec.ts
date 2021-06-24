@@ -42,7 +42,7 @@ describe('slice', () => {
         expect(result).toStrictEqual(expected);
       });
 
-      it(`when fulfilled, then status is ${Status.status.SUBMITTING}`, () => {
+      it(`when fulfilled, then state is updated by payload`, () => {
         const payload: Parameters<typeof Operations.fetchTodos.fulfilled>[0] = {
           pageInfo: {},
           todos: [],
