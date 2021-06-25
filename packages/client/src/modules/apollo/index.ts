@@ -1,10 +1,12 @@
 import * as ApolloClient from '@apollo/client';
 
+import { environment } from '~client/environments/environment';
+
 import { link } from './link';
 
-const cache = new ApolloClient.InMemoryCache({ addTypename: false });
+export const cache = new ApolloClient.InMemoryCache({ addTypename: false });
 
-const defaultOptions: ApolloClient.DefaultOptions = {
+export const defaultOptions: ApolloClient.DefaultOptions = {
   mutate: {
     errorPolicy: 'all',
   },
@@ -22,4 +24,5 @@ export const client = new ApolloClient.ApolloClient({
   cache,
   defaultOptions,
   link,
+  uri: environment.apiEndpoint,
 });

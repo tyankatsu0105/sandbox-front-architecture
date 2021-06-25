@@ -1,11 +1,12 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import * as ApolloClient from '@apollo/client';
 import * as ReduxToolkit from '@reduxjs/toolkit';
 
 import { environment } from '~client/environments/environment';
+import * as Modules from '~client/modules';
 
-const cache = new InMemoryCache({});
-const client = new ApolloClient({
-  cache: cache,
+const client = new ApolloClient.ApolloClient({
+  cache: Modules.Apollo.cache,
+  defaultOptions: Modules.Apollo.defaultOptions,
   uri: environment.apiEndpoint,
 });
 
