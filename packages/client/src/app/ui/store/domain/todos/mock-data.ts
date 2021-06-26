@@ -1,6 +1,9 @@
 import { status } from '~client/app/ui/store/status';
+import { TodosQuery } from '~client/mocks/handlers/query';
 
 import { State } from './types';
+
+export const responseTodosQuery = TodosQuery.initialData;
 
 export const mockState: State = {
   entities: {

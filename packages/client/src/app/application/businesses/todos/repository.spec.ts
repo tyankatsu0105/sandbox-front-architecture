@@ -53,5 +53,18 @@ describe('repository', () => {
         ]);
       });
     });
+
+    describe('toEntityPageInfo', () => {
+      it('when called, then return PageInfo define as entity', () => {
+        const result = new Repository.TodosRepository(data).toEntityPageInfo;
+
+        expect(result).toStrictEqual({
+          endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
+          hasNextPage: true,
+          hasPreviousPage: false,
+          startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
+        });
+      });
+    });
   });
 });
