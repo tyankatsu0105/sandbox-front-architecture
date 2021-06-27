@@ -17,13 +17,17 @@ export const fetchTodos = createAsyncThunk<
   AsyncThunkConfig<{ message: string }>
 >(`${name}/fetchTodos`, async (args, thunkAPI) => {
   try {
-    const { data } = await thunkAPI.extra.api.query<
+    const { data, errors } = await thunkAPI.extra.api.query<
       GraphQLTypes.TodosQuery,
       GraphQLTypes.TodosQueryVariables
     >({
       query: GraphQLTypes.TodosDocument,
       variables: { page: { after: args.pageInfo?.endCursor, first: 5 } },
     });
+
+    if (errors && errors.length > 0) {
+      return thunkAPI.rejectWithValue({ message: errors[0].message });
+    }
 
     return {
       pageInfo: new Repository.TodosRepository(data).toEntityPageInfo,

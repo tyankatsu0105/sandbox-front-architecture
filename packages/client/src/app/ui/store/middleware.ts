@@ -17,7 +17,7 @@ export type ExtraArgument = {
   };
 };
 
-const extraArgument: ExtraArgument = {
+export const extraArgument: ExtraArgument = {
   api: {
     mutate: client.mutate,
     query: client.query,

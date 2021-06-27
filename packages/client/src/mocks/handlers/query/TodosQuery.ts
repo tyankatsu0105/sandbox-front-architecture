@@ -65,17 +65,17 @@ export const initialData: GraphQLTypes.TodosQuery = {
     pageInfo: {
       __typename: 'PageInfo',
       endCursor: 'YXJyYXljb25uZWN0aW9uOjQ=',
-      hasNextPage: true,
+      hasNextPage: false,
       hasPreviousPage: false,
       startCursor: 'YXJyYXljb25uZWN0aW9uOjA=',
     },
-    totalCount: 27,
+    totalCount: 5,
   },
 };
 
 export const handlers = [
   graphql.query<GraphQLTypes.TodosQuery, GraphQLTypes.TodosQueryVariables>(
-    'TodosQuery',
+    'Todos',
     (_req, res, ctx) => {
       const data = initialData;
 

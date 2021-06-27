@@ -17,15 +17,16 @@ export const createStore = () => {
 // ==================================================
 // types
 // ==================================================
-
-export type RootState = ReturnType<ReturnType<typeof createStore>['getState']>;
+type Store = ReturnType<typeof createStore>;
+export type RootState = ReturnType<Store['getState']>;
+export type AppDispatch = Store['dispatch'];
 
 /**
  * Override type AsyncThunkConfig of ReduxToolkit
  * @see https://github.com/reduxjs/redux-toolkit/blob/de1282c1ec7eb8db1590a60c55f0ec21004b8675/src/createAsyncThunk.ts#L65-L70
  */
 export type AsyncThunkConfig<RejectValue = unknown> = {
-  dispatch: ReturnType<typeof createStore>['dispatch'];
+  dispatch: AppDispatch;
   extra: Middleware.ExtraArgument;
   rejectValue: RejectValue;
   state: RootState;
