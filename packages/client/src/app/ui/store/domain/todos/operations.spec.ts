@@ -1,65 +1,55 @@
-import * as Repository from '~client/app/application/businesses/todos/repository';
-import { state } from '~client/app/ui/store/mock';
+import { GraphQLError } from 'graphql';
+import { graphql } from 'msw';
 
-import * as MockData from './mock-data';
+import * as Repository from '~client/app/application/businesses/todos/repository';
+import { store } from '~client/app/ui/store/mock';
+import { Query } from '~client/mocks/handlers';
+import { server } from '~client/mocks/server';
+import { Apollo } from '~client/modules';
+
 import * as Operations from './operations';
 
+beforeAll(() => server.listen());
+beforeEach(() => Apollo.client.cache.reset());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
 describe('operations', () => {
-  let dispatch: any;
-  let getState: any;
-  let extra: any;
-  beforeEach(() => {
-    dispatch = jest.fn();
-    getState = jest.fn(() => state);
-    extra = {};
-  });
   describe('fetchTodos', () => {
     it('when succeed query, then return transformed data', async () => {
-      const data = MockData.responseTodosQuery;
-      extra = {
-        api: {
-          query: jest.fn().mockResolvedValue({ data }),
-        },
-      };
       const args: Parameters<typeof Operations.fetchTodos>[0] = {
         pageInfo: {},
       };
 
-      const result = await Operations.fetchTodos(args)(
-        dispatch,
-        getState,
-        extra
-      );
+      const result = await store.dispatch(Operations.fetchTodos(args));
 
       expect(result.payload).toStrictEqual({
-        pageInfo: new Repository.TodosRepository(data).toEntityPageInfo,
-        todos: new Repository.TodosRepository(data).toEntityTodos,
-        totalCount: data.todos.totalCount,
+        pageInfo: new Repository.TodosRepository(Query.TodosQuery.initialData)
+          .toEntityPageInfo,
+        todos: new Repository.TodosRepository(Query.TodosQuery.initialData)
+          .toEntityTodos,
+        totalCount: Query.TodosQuery.initialData.todos.totalCount,
       });
     });
 
     it('when fail query, then return error message', async () => {
-      const error: ReturnType<
-        typeof Operations.fetchTodos['rejected']
-      >['error'] = {
-        message: 'aaaaaaaaaa',
-      };
-      extra = {
-        api: {
-          query: jest.fn().mockRejectedValue(error),
+      const errors: Partial<GraphQLError>[] = [
+        {
+          message: 'aaaaa',
         },
-      };
+      ];
+      server.use(
+        graphql.query('Todos', (_req, res, ctx) => {
+          return res(ctx.errors<Partial<GraphQLError>[]>(errors));
+        })
+      );
       const args: Parameters<typeof Operations.fetchTodos>[0] = {
         pageInfo: {},
       };
 
-      const result = await Operations.fetchTodos(args)(
-        dispatch,
-        getState,
-        extra
-      );
+      const result = await store.dispatch(Operations.fetchTodos(args));
 
-      expect(result.payload).toStrictEqual(error);
+      expect(result.payload).toStrictEqual(errors[0]);
     });
   });
 });
