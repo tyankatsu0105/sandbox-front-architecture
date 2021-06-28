@@ -40,7 +40,7 @@ describe('operations', () => {
       ];
       server.use(
         graphql.query('Todos', (_req, res, ctx) => {
-          return res(ctx.errors<Partial<GraphQLError>[]>(errors));
+          return res(ctx.errors(errors));
         })
       );
       const args: Parameters<typeof Operations.fetchTodos>[0] = {
