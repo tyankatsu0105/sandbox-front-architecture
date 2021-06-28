@@ -37,9 +37,7 @@ export const usePage = () => {
 
 export const useForm = () => {
   const dispatch = ReactRedux.useDispatch();
-  const initialFormValues = ReactRedux.useSelector(
-    StoreTodos.initialFormValuesSelector
-  );
+  const initialFormValues = ReactRedux.useSelector(StoreTodos.allSelector);
 
   const createFormHandler = ReactHookForm.useForm<Presenter.CreteInputValues>();
   const editFormHandler = ReactHookForm.useForm<Presenter.EditInputArray>({

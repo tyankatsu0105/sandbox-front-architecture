@@ -18,18 +18,3 @@ export const statusSelector = ReduxToolkit.createSelector(
   featureStateSelector,
   (state) => state.status
 );
-
-export const listEntitiesSelector = ReduxToolkit.createSelector(
-  featureStateSelector,
-  (state) => Object.values(state.entities)
-);
-
-export const initialFormValuesSelector = ReduxToolkit.createSelector(
-  listEntitiesSelector,
-  (state) => {
-    if (state.length === 0) return [];
-    return state.map((item) => {
-      return { ...item };
-    });
-  }
-);
