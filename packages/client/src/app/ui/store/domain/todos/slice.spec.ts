@@ -43,9 +43,16 @@ describe('slice', () => {
       });
 
       it(`when fulfilled, then state is updated by payload`, () => {
+        const todo = {
+          createdAt: new Date('2020-01-01').toISOString(),
+          description: 'Study',
+          id: '96CF6F3C-6C6A-4598-83AA-B042C822E5FF',
+          isDone: false,
+          updatedAt: new Date('2020-01-05').toISOString(),
+        };
         const payload: Parameters<typeof Operations.fetchTodos.fulfilled>[0] = {
           pageInfo: {},
-          todos: [],
+          todos: [todo],
           totalCount: 1,
         };
         const action: Omit<
@@ -57,6 +64,11 @@ describe('slice', () => {
         };
         const expected: State = {
           ...featureState,
+          entities: {
+            ...featureState.entities,
+            [todo.id]: todo,
+          },
+          ids: [...featureState.ids, todo.id],
           pageInfo: payload.pageInfo,
           status: Status.status.SUCCESS,
           totalCount: payload.totalCount,
